@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import SearchBar from "@/components/SearchBar";
 import AppGrid from "@/components/AppGrid";
 import Navbar from "@/components/Navbar";
@@ -17,7 +16,6 @@ const Index = () => {
 
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-6 sm:p-8 md:p-12 pt-24">
         <div className="w-full max-w-4xl">
-          <Header />
           <SearchBar />
           <div className="mt-12">
             <AppGrid />
