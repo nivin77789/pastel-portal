@@ -6,10 +6,10 @@
 
 @layer base {
   :root {
-    /* Pastel gradient colors */
-    --gradient-start: 330 100% 96%;
-    --gradient-mid: 280 100% 97%;
-    --gradient-end: 210 100% 96%;
+    /* Neutral gradient colors */
+    --gradient-start: 220 20% 97%;
+    --gradient-mid: 210 15% 98%;
+    --gradient-end: 200 20% 97%;
     
     /* Core colors */
     --background: 240 20% 98%;
