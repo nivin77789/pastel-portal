@@ -11,131 +11,122 @@ import {
   Settings, 
   MessageSquare, 
   StickyNote,
-  Menu,
-  X,
-  Home
+  Grid3X3,
+  Search,
+  Bell
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
-const navItems = [
-  { icon: Home, label: "Home", path: "/" },
-  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
-  { icon: BarChart3, label: "Analytics", path: "/analytics" },
-  { icon: Users, label: "CRM", path: "/crm" },
-  { icon: Package, label: "Inventory", path: "/inventory" },
-  { icon: Wallet, label: "Payroll", path: "/payroll" },
-  { icon: UserCircle, label: "HR Portal", path: "/hr-portal" },
-  { icon: HeadphonesIcon, label: "Support", path: "/support" },
-  { icon: FileText, label: "Reports", path: "/reports" },
-  { icon: Settings, label: "Settings", path: "/settings" },
-  { icon: MessageSquare, label: "Slack", path: "/slack" },
-  { icon: StickyNote, label: "Notes", path: "/notes" },
+const appItems = [
+  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard", color: "bg-blue-500" },
+  { icon: BarChart3, label: "Analytics", path: "/analytics", color: "bg-emerald-500" },
+  { icon: Users, label: "CRM", path: "/crm", color: "bg-violet-500" },
+  { icon: Package, label: "Inventory", path: "/inventory", color: "bg-amber-500" },
+  { icon: Wallet, label: "Payroll", path: "/payroll", color: "bg-rose-500" },
+  { icon: UserCircle, label: "HR Portal", path: "/hr-portal", color: "bg-cyan-500" },
+  { icon: HeadphonesIcon, label: "Support", path: "/support", color: "bg-pink-500" },
+  { icon: FileText, label: "Reports", path: "/reports", color: "bg-indigo-500" },
+  { icon: Settings, label: "Settings", path: "/settings", color: "bg-slate-500" },
+  { icon: MessageSquare, label: "Slack", path: "/slack", color: "bg-purple-500" },
+  { icon: StickyNote, label: "Notes", path: "/notes", color: "bg-yellow-500" },
 ];
 
 const Navbar = () => {
   const location = useLocation();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
-    <>
-      <nav className="fixed top-0 left-0 right-0 z-50 px-4 py-3 sm:px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="glass-card rounded-2xl px-4 py-3 flex items-center justify-between">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                <span className="text-white font-bold text-sm">W</span>
-              </div>
-              <span className="font-semibold text-foreground hidden sm:block">Workspace</span>
-            </Link>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center shadow-md">
+              <span className="text-white font-bold text-lg">W</span>
+            </div>
+            <span className="font-semibold text-gray-900 text-lg tracking-tight">Workspace</span>
+          </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-1">
-              {navItems.slice(0, 8).map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-all ${
-                    location.pathname === item.path
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                  }`}
-                >
-                  <item.icon className="w-4 h-4" />
-                  <span className="hidden xl:inline">{item.label}</span>
-                </Link>
-              ))}
-              
-              {/* More dropdown indicator */}
-              <div className="relative group">
-                <button className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all">
-                  <Menu className="w-4 h-4" />
-                  <span className="hidden xl:inline">More</span>
-                </button>
-                
-                {/* Dropdown */}
-                <div className="absolute right-0 top-full mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                  <div className="glass-card rounded-xl p-2 min-w-[160px] shadow-lg">
-                    {navItems.slice(8).map((item) => (
+          {/* Right side icons */}
+          <div className="flex items-center gap-2">
+            {/* Search */}
+            <button className="p-2.5 rounded-full hover:bg-gray-100 transition-colors">
+              <Search className="w-5 h-5 text-gray-600" />
+            </button>
+
+            {/* Notifications */}
+            <button className="p-2.5 rounded-full hover:bg-gray-100 transition-colors relative">
+              <Bell className="w-5 h-5 text-gray-600" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
+            </button>
+
+            {/* App Launcher */}
+            <div className="relative" ref={menuRef}>
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className={`p-2.5 rounded-full transition-colors ${
+                  menuOpen ? "bg-gray-100" : "hover:bg-gray-100"
+                }`}
+              >
+                <Grid3X3 className="w-5 h-5 text-gray-600" />
+              </button>
+
+              {/* App Menu Dropdown */}
+              {menuOpen && (
+                <div className="absolute right-0 top-full mt-2 w-[320px] bg-white rounded-2xl shadow-xl border border-gray-200/80 p-3 animate-scale-in origin-top-right">
+                  <div className="grid grid-cols-3 gap-1">
+                    {appItems.map((item) => (
                       <Link
                         key={item.path}
                         to={item.path}
-                        className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                          location.pathname === item.path
-                            ? "bg-primary/10 text-primary"
-                            : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                        onClick={() => setMenuOpen(false)}
+                        className={`flex flex-col items-center gap-2 p-3 rounded-xl transition-all duration-200 group hover:bg-gray-50 ${
+                          location.pathname === item.path ? "bg-gray-50" : ""
                         }`}
                       >
-                        <item.icon className="w-4 h-4" />
-                        <span>{item.label}</span>
+                        <div className={`w-11 h-11 rounded-full ${item.color} flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:shadow-md transition-all duration-200`}>
+                          <item.icon className="w-5 h-5 text-white" />
+                        </div>
+                        <span className="text-xs font-medium text-gray-700 text-center leading-tight">
+                          {item.label}
+                        </span>
                       </Link>
                     ))}
                   </div>
+
+                  {/* Divider */}
+                  <div className="mt-3 pt-3 border-t border-gray-100">
+                    <Link
+                      to="/"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center justify-center gap-2 py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                    >
+                      View all apps
+                    </Link>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl hover:bg-secondary/50 transition-colors"
-            >
-              {mobileMenuOpen ? (
-                <X className="w-5 h-5" />
-              ) : (
-                <Menu className="w-5 h-5" />
-              )}
+            {/* User Avatar */}
+            <button className="ml-1 w-9 h-9 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-sm font-semibold hover:shadow-md transition-shadow">
+              JD
             </button>
           </div>
         </div>
-      </nav>
-
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 lg:hidden">
-          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
-          <div className="absolute top-20 left-4 right-4 glass-card rounded-2xl p-4 shadow-lg animate-scale-in">
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-              {navItems.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`flex flex-col items-center gap-2 p-3 rounded-xl text-center transition-all ${
-                    location.pathname === item.path
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                  }`}
-                >
-                  <item.icon className="w-5 h-5" />
-                  <span className="text-xs font-medium">{item.label}</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+      </div>
+    </nav>
   );
 };
 
