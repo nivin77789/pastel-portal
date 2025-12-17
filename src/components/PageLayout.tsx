@@ -1,4 +1,6 @@
 import { ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import Navbar from "./Navbar";
 
 interface PageLayoutProps {
@@ -9,6 +11,8 @@ interface PageLayoutProps {
 }
 
 const PageLayout = ({ children, title, subtitle, accentColor }: PageLayoutProps) => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen gradient-bg">
       <Navbar />
@@ -22,6 +26,15 @@ const PageLayout = ({ children, title, subtitle, accentColor }: PageLayoutProps)
       {/* Page Content */}
       <main className="relative z-10 px-6 pt-24 pb-12 sm:px-8">
         <div className="max-w-7xl mx-auto">
+          {/* Back Button */}
+          <button
+            onClick={() => navigate(-1)}
+            className="mb-6 flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors group"
+          >
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            <span className="text-sm font-medium">Back</span>
+          </button>
+
           <div className="mb-8 opacity-0 animate-fade-in flex items-center gap-3">
             <div className={`w-3 h-3 rounded-full ${accentColor}`} />
             <div>
